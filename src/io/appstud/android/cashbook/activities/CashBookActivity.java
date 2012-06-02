@@ -1,14 +1,13 @@
 package io.appstud.android.cashbook.activities;
 
+import io.appstud.android.cashbook.CashBook;
 import io.appstud.android.cashbook.R;
-import io.appstud.android.cashbook.helpers.CashBookDataSource;
 import io.appstud.android.cashbook.helpers.Entry;
 import io.appstud.android.cashbook.helpers.EntryAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import android.app.ActionBar;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -18,29 +17,23 @@ import android.view.MenuItem;
 
 public class CashBookActivity extends ListActivity {
 
-	private CashBookDataSource cashBookDataSource;
+	private CashBook cashBook;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.cashbook_date);
-
-		ActionBar actionBar = getActionBar();
-		actionBar.setDisplayShowTitleEnabled(false);
-
-		cashBookDataSource = new CashBookDataSource(this);
-		cashBookDataSource.open();
+		cashBook = (CashBook) getApplication();
 
 		List<Entry> entries = new ArrayList<Entry>();
 
-		entries = cashBookDataSource.getAllEntries();
+		entries = cashBook.getCashBookDataSource().getAllEntries();
 
 		EntryAdapter adapter = new EntryAdapter(this, R.layout.row_entry_date,
 				entries);
 
 		setListAdapter(adapter);
-		cashBookDataSource.close();
 
 	}
 

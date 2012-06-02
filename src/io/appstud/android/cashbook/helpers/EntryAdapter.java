@@ -19,9 +19,9 @@ import android.widget.TextView;
 
 public class EntryAdapter extends ArrayAdapter<Entry> {
 
-	Context context;
-	int layoutResourceId;
-	List<Entry> entries = new ArrayList<Entry>();
+	private Context context;
+	private int layoutResourceId;
+	private List<Entry> entries = new ArrayList<Entry>();
 	private static final String TAG = "EntryAdapter";
 
 	public EntryAdapter(Context context, int layoutResourceId,

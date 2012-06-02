@@ -1,7 +1,7 @@
 package io.appstud.android.cashbook.activities;
 
+import io.appstud.android.cashbook.CashBook;
 import io.appstud.android.cashbook.R;
-import io.appstud.android.cashbook.helpers.CashBookDataSource;
 import io.appstud.android.cashbook.helpers.Entry;
 import io.appstud.android.cashbook.helpers.Tag;
 
@@ -33,30 +33,17 @@ public class AddEntryActivity extends Activity {
 
 	private static final String TAG = "AddEntryActivity";
 
-	CashBookDataSource cashBookDataSource = new CashBookDataSource(this);
-	List<Tag> tags = new ArrayList<Tag>();
-	Entry entry = new Entry();
-	static final int DATE_DIALOG_ID = 0;
-	static final int ADD_TAG_DIALOG_ID = 1;
+	private CashBook cashBook;
 
-	int mYear;
-	int mDay;
-	int mMonth;
+	private Entry entry = new Entry();
+	private static final int DATE_DIALOG_ID = 0;
 
-	private DatePickerDialog.OnDateSetListener mDateSetListener = new DatePickerDialog.OnDateSetListener() {
-		@Override
-		public void onDateSet(DatePicker view, int year, int monthOfYear,
-				int dayOfMonth) {
-			mYear = year;
-			mMonth = monthOfYear;
-			mDay = dayOfMonth;
-			updateDate();
-		}
-	};
+	private Date date;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		cashBook = (CashBook) getApplication();
 		setContentView(R.layout.add_entry);
 		setupViews();
 	}
@@ -79,9 +66,7 @@ public class AddEntryActivity extends Activity {
 		ToggleButton toggleButton;
 		List<Tag> tags = new ArrayList<Tag>();
 
-		cashBookDataSource.open();
-		tags = cashBookDataSource.getTags();
-		cashBookDataSource.close();
+		tags = cashBook.getCashBookDataSource().getTags();
 
 		for (Tag tag : tags) {
 			toggleButton = new ToggleButton(this);
@@ -89,7 +74,6 @@ public class AddEntryActivity extends Activity {
 			toggleButton.setTextOn(tag.getTag());
 			toggleButton.setTextOff(tag.getTag());
 			tagsLinearLayout.addView(toggleButton);
-
 		}
 
 	}
@@ -112,9 +96,7 @@ public class AddEntryActivity extends Activity {
 		Button dateButton = (Button) findViewById(R.id.addDate);
 
 		Calendar c = Calendar.getInstance();
-		mYear = c.get(Calendar.YEAR);
-		mMonth = c.get(Calendar.MONTH);
-		mDay = c.get(Calendar.DAY_OF_MONTH);
+		date = c.getTime();
 
 		String today = DateFormat.getDateInstance(DateFormat.MEDIUM).format(
 				c.getTime());
@@ -127,12 +109,21 @@ public class AddEntryActivity extends Activity {
 		});
 	}
 
+	private DatePickerDialog.OnDateSetListener mDateSetListener = new DatePickerDialog.OnDateSetListener() {
+		@Override
+		public void onDateSet(DatePicker view, int year, int monthOfYear,
+				int dayOfMonth) {
+			Calendar c = Calendar.getInstance();
+			c.set(year, monthOfYear, dayOfMonth);
+			date = c.getTime();
+			updateDate();
+		}
+	};
+
 	private void updateDate() {
 		Button dateButton = (Button) findViewById(R.id.addDate);
 		Date updatedDate = new Date();
-		updatedDate.setYear(mYear - 1900);
-		updatedDate.setDate(mDay);
-		updatedDate.setMonth(mMonth);
+		updatedDate = date;
 		String updatedDateStr = DateFormat.getDateInstance(DateFormat.MEDIUM)
 				.format(updatedDate);
 		dateButton.setText(updatedDateStr);
@@ -143,8 +134,11 @@ public class AddEntryActivity extends Activity {
 		Dialog dialog;
 		switch (id) {
 		case DATE_DIALOG_ID:
-			dialog = new DatePickerDialog(this, mDateSetListener, mYear,
-					mMonth, mDay);
+			Calendar c = Calendar.getInstance();
+			c.setTime(date);
+			dialog = new DatePickerDialog(this, mDateSetListener,
+					c.get(Calendar.YEAR), c.get(Calendar.MONTH),
+					c.get(Calendar.DAY_OF_MONTH));
 			break;
 		default:
 			dialog = null;
@@ -195,9 +189,7 @@ public class AddEntryActivity extends Activity {
 				error = true;
 			}
 			if (!error) {
-				cashBookDataSource.open();
-				cashBookDataSource.createEntry(entry);
-				cashBookDataSource.close();
+				cashBook.getCashBookDataSource().createEntry(entry);
 				gotoHome();
 			}
 			return true;
@@ -216,5 +208,4 @@ public class AddEntryActivity extends Activity {
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		startActivity(intent);
 	}
-
 }

@@ -19,8 +19,6 @@ import android.widget.ToggleButton;
 
 public class AddTagDialogFragment extends DialogFragment {
 
-	boolean canceled;
-
 	static AddTagDialogFragment newInstance() {
 
 		AddTagDialogFragment f = new AddTagDialogFragment();

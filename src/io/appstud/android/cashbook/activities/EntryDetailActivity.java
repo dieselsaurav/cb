@@ -1,24 +1,44 @@
 package io.appstud.android.cashbook.activities;
 
+import io.appstud.android.cashbook.CashBook;
 import io.appstud.android.cashbook.R;
+import io.appstud.android.cashbook.helpers.Entry;
+
+import java.text.DateFormat;
+
 import android.app.Activity;
 import android.os.Bundle;
 import android.widget.TextView;
 
 public class EntryDetailActivity extends Activity {
 
+	private long entryId;
+	private Entry entry;
+	private CashBook cashBook;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.detail_entry);
+		Bundle bundle = getIntent().getExtras();
+		entryId = bundle.getLong("ENTRY_ID");
+		cashBook = (CashBook) getApplication();
+		entry = cashBook.getCashBookDataSource().getEntryById(entryId);
 		setupViews();
 	}
 
 	private void setupViews() {
-		TextView tv = (TextView) findViewById(R.id.textView1);
-		Bundle bundle = getIntent().getExtras();
-		long entryId = bundle.getLong("ENTRY_ID");
-		tv.setText(String.valueOf(entryId));
+
+		TextView amountTextView = (TextView) findViewById(R.id.showAmount);
+		amountTextView.setText(String.valueOf(entry.getAmount()));
+
+		TextView dateTextView = (TextView) findViewById(R.id.showDate);
+		String formattedDate = DateFormat.getDateInstance(DateFormat.MEDIUM)
+				.format(entry.getDate());
+		dateTextView.setText(formattedDate);
+
+		TextView descTextView = (TextView) findViewById(R.id.showDesciption);
+		descTextView.setText(String.valueOf(entry.getDesciption()));
 	}
 
 }

@@ -13,6 +13,7 @@ public class CashBookSQLiteOpenHelper extends SQLiteOpenHelper {
 	private static final int DB_VERSION = 4;
 	private static final String DB_NAME = "cashbook.db";
 
+	// Public variables for column names
 	public static final String TABLE_NAME_ENTRIES = "entries";
 	public static final String TABLE_NAME_TAGS = "tags";
 	public static final String TABLE_NAME_ENTRY_HAS_TAG = "entry_has_tags";
