@@ -3,6 +3,7 @@ package io.appstud.android.cashbook.activities;
 import io.appstud.android.cashbook.CashBook;
 import io.appstud.android.cashbook.R;
 import io.appstud.android.cashbook.helpers.Entry;
+import io.appstud.android.cashbook.helpers.Tag;
 
 import java.text.DateFormat;
 
@@ -38,7 +39,31 @@ public class EntryDetailActivity extends Activity {
 		dateTextView.setText(formattedDate);
 
 		TextView descTextView = (TextView) findViewById(R.id.showDesciption);
-		descTextView.setText(String.valueOf(entry.getDesciption()));
-	}
+		String displayDescText = entry.getDesciption();
+		if (displayDescText.equals(""))
+			displayDescText = getString(R.string.no_description_found);
 
+		descTextView.setText(displayDescText);
+
+		TextView tagsTextView = (TextView) findViewById(R.id.showTags);
+		String tagsString = "";
+
+		for (Tag tag : entry.getTags()) {
+			tagsString = tagsString + tag.getTag() + ", ";
+		}
+
+		if (tagsString.equals(""))
+			tagsString = getString(R.string.no_tags_found);
+
+		tagsTextView.setText(tagsString);
+
+		if (entry.getFlag().equals(
+				this.getResources().getString(R.string.credit))) {
+			amountTextView.setTextColor(this.getResources().getColor(
+					R.color.light_green));
+		} else
+			amountTextView.setTextColor(this.getResources().getColor(
+					R.color.light_red));
+
+	}
 }
