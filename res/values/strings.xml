@@ -17,5 +17,8 @@
     <string name="tags">Tags</string>
     <string name="no_description_found">No Description Found</string>
     <string name="no_tags_found">No Tags Found</string>
+    <string name="delete">Delete</string>
+    <string name="edit">Edit</string>
+    <string name="are_you_sure">Are you sure?</string>
 
 </resources>

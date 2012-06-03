@@ -27,6 +27,8 @@ public final class R {
         public static final int desciptionEditText=0x7f070003;
         public static final int layout_root=0x7f070006;
         public static final int menuAdd=0x7f070010;
+        public static final int menuEntryDelete=0x7f070012;
+        public static final int menuEntryEdit=0x7f070011;
         public static final int showAmount=0x7f070008;
         public static final int showDate=0x7f070009;
         public static final int showDesciption=0x7f07000a;
@@ -46,18 +48,22 @@ public final class R {
     public static final class menu {
         public static final int actionbar_addmenu=0x7f060000;
         public static final int actionbar_menu=0x7f060001;
+        public static final int actionbar_menu_entry_details=0x7f060002;
     }
     public static final class string {
         public static final int add=0x7f050002;
         public static final int add_entry=0x7f050003;
         public static final int amount=0x7f05000b;
         public static final int app_name=0x7f050000;
+        public static final int are_you_sure=0x7f050012;
         public static final int cashbook_is_empty=0x7f050001;
         public static final int create_new_tag=0x7f05000a;
         public static final int credit=0x7f050004;
         public static final int date=0x7f05000c;
         public static final int debit=0x7f050005;
+        public static final int delete=0x7f050010;
         public static final int description=0x7f050007;
+        public static final int edit=0x7f050011;
         public static final int new_tag=0x7f050009;
         public static final int no_description_found=0x7f05000e;
         public static final int no_tags_found=0x7f05000f;

@@ -50,6 +50,7 @@ public class CashBookActivity extends ListActivity {
 		switch (item.getItemId()) {
 		case R.id.menuAdd:
 			intent = new Intent(this, AddEntryActivity.class);
+			intent.putExtra("ENTRY_FLAG", "NEW");
 			startActivity(intent);
 			return true;
 		default:

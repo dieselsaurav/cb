@@ -8,7 +8,14 @@ import io.appstud.android.cashbook.helpers.Tag;
 import java.text.DateFormat;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.TextView;
 
 public class EntryDetailActivity extends Activity {
@@ -64,6 +71,58 @@ public class EntryDetailActivity extends Activity {
 		} else
 			amountTextView.setTextColor(this.getResources().getColor(
 					R.color.light_red));
+
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.actionbar_menu_entry_details, menu);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			cashBook.goHome(cashBook);
+			return true;
+		case R.id.menuEntryDelete:
+			showDeleteDialog();
+			return true;
+		case R.id.menuEntryEdit:
+			Intent intent = new Intent(this, AddEntryActivity.class);
+			intent.putExtra("ENTRY_ID", entryId);
+			intent.putExtra("ENTRY_FLAG", "OLD");
+			startActivity(intent);
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+
+		}
+	}
+
+	private void showDeleteDialog() {
+
+		Builder deleteDialogBuilder = new Builder(this);
+		deleteDialogBuilder.setTitle(getString(R.string.delete));
+		deleteDialogBuilder
+				.setMessage(getString(R.string.are_you_sure))
+				.setPositiveButton(getString(android.R.string.yes),
+						new DialogInterface.OnClickListener() {
+
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which) {
+								cashBook.getCashBookDataSource().deleteEntry(
+										entryId);
+								cashBook.goHome(cashBook);
+							}
+						})
+				.setNegativeButton(getString(android.R.string.no), null);
+
+		AlertDialog deleteDialog = deleteDialogBuilder.create();
+		deleteDialog.show();
 
 	}
 }

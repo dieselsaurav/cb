@@ -16,7 +16,6 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -39,18 +38,43 @@ public class AddEntryActivity extends Activity {
 	private static final int DATE_DIALOG_ID = 0;
 
 	private Date date;
+	private long entryId;
+	private String entryFlag;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		cashBook = (CashBook) getApplication();
 		setContentView(R.layout.add_entry);
+		Bundle bundle = getIntent().getExtras();
+		entryFlag = bundle.getString("ENTRY_FLAG");
+		entryId = bundle.getLong("ENTRY_ID");
 		setupViews();
 	}
 
 	private void setupViews() {
 		setupDatePicker();
 		setupTagSelector();
+		if (!entryFlag.equals("NEW")) {
+			setupEditEntry();
+		}
+	}
+
+	private void setupEditEntry() {
+		EditText amount = (EditText) findViewById(R.id.addAmountET);
+		Button date = (Button) findViewById(R.id.addDate);
+		EditText description = (EditText) findViewById(R.id.desciptionEditText);
+		ToggleButton toggleButton = (ToggleButton) findViewById(R.id.toggleCredit);
+		LinearLayout tagsLinearLayout = (LinearLayout) findViewById(R.id.tagsLinearLayout);
+
+		Entry editEntry = cashBook.getCashBookDataSource()
+				.getEntryById(entryId);
+		amount.setText(editEntry.getAmount());
+		date.setText(DateFormat.getDateInstance(DateFormat.MEDIUM).format(
+				editEntry.getDate()));
+		description.setText(editEntry.getDesciption());
+		
+
 	}
 
 	public void showAddTagDialog(View v) {
@@ -181,7 +205,7 @@ public class AddEntryActivity extends Activity {
 
 		switch (item.getItemId()) {
 		case android.R.id.home:
-			gotoHome();
+			cashBook.goHome(cashBook);
 			return true;
 		case R.id.actionbar_addmenu_save:
 			if (amount.getText().toString().length() == 0) {
@@ -190,11 +214,11 @@ public class AddEntryActivity extends Activity {
 			}
 			if (!error) {
 				cashBook.getCashBookDataSource().createEntry(entry);
-				gotoHome();
+				cashBook.goHome(cashBook);
 			}
 			return true;
 		case R.id.actionbar_addmenu_cancel:
-			gotoHome();
+			cashBook.goHome(cashBook);
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -202,10 +226,4 @@ public class AddEntryActivity extends Activity {
 		}
 	}
 
-	private void gotoHome() {
-		Intent intent = new Intent();
-		intent = new Intent(this, CashBookActivity.class);
-		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		startActivity(intent);
-	}
 }

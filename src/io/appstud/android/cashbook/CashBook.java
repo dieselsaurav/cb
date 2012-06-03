@@ -1,7 +1,10 @@
 package io.appstud.android.cashbook;
 
+import io.appstud.android.cashbook.activities.CashBookActivity;
 import io.appstud.android.cashbook.helpers.CashBookDataSource;
 import android.app.Application;
+import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 
 public class CashBook extends Application {
@@ -15,6 +18,12 @@ public class CashBook extends Application {
 		cashBookDataSource.open();
 		Log.d(TAG, "Cashbook Created");
 		super.onCreate();
+	}
+
+	public void goHome(Context context) {
+		Intent intent = new Intent(context, CashBookActivity.class);
+		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		startActivity(intent);
 	}
 
 	public CashBookDataSource getCashBookDataSource() {
