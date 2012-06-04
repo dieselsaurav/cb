@@ -34,7 +34,6 @@ public class AddEntryActivity extends Activity {
 
 	private CashBook cashBook;
 
-	private Entry entry = new Entry();
 	private static final int DATE_DIALOG_ID = 0;
 
 	private Date date;
@@ -56,24 +55,74 @@ public class AddEntryActivity extends Activity {
 		setupDatePicker();
 		setupTagSelector();
 		if (!entryFlag.equals("NEW")) {
-			setupEditEntry();
+			Entry entry = cashBook.getCashBookDataSource()
+					.getEntryById(entryId);
+			setEntryToUI(entry);
 		}
 	}
 
-	private void setupEditEntry() {
+	private Entry getEntryFromUI() {
 		EditText amount = (EditText) findViewById(R.id.addAmountET);
 		Button date = (Button) findViewById(R.id.addDate);
 		EditText description = (EditText) findViewById(R.id.desciptionEditText);
 		ToggleButton toggleButton = (ToggleButton) findViewById(R.id.toggleCredit);
 		LinearLayout tagsLinearLayout = (LinearLayout) findViewById(R.id.tagsLinearLayout);
+		Entry entry = new Entry();
 
-		Entry editEntry = cashBook.getCashBookDataSource()
-				.getEntryById(entryId);
-		amount.setText(editEntry.getAmount());
+		Date dateAdded = null;
+		try {
+			dateAdded = DateFormat.getDateInstance().parse(
+					date.getText().toString());
+		} catch (ParseException e) {
+			Log.d(TAG, "Date cannot be parsed");
+			e.printStackTrace();
+		}
+
+		entry.setAmount(amount.getText().toString());
+		entry.setDate(dateAdded.getTime());
+		entry.setDesciption(description.getText().toString());
+		entry.setFlag(toggleButton.getText().toString());
+		entry.setTags(getSelectedTags(tagsLinearLayout));
+
+		return entry;
+	}
+
+	private void setEntryToUI(Entry entry) {
+		EditText amount = (EditText) findViewById(R.id.addAmountET);
+		Button date = (Button) findViewById(R.id.addDate);
+		EditText description = (EditText) findViewById(R.id.desciptionEditText);
+		ToggleButton toggleButton = (ToggleButton) findViewById(R.id.toggleCredit);
+		LinearLayout tagsLinearLayout = (LinearLayout) findViewById(R.id.tagsLinearLayout);
+		List<Tag> tags = new ArrayList<Tag>();
+		tags = entry.getTags();
+		List<String> tagsList = new ArrayList<String>();
+		for (Tag t : tags) {
+			tagsList.add(t.getTag());
+		}
+
+		amount.setText(entry.getAmount());
 		date.setText(DateFormat.getDateInstance(DateFormat.MEDIUM).format(
-				editEntry.getDate()));
-		description.setText(editEntry.getDesciption());
-		
+				entry.getDate()));
+		description.setText(entry.getDesciption());
+
+		if (entry.getFlag().equals(getString(R.string.credit))) {
+			toggleButton.setChecked(true);
+		} else {
+			toggleButton.setChecked(false);
+		}
+
+		for (int i = 0; i < tagsLinearLayout.getChildCount(); i++) {
+			View v = tagsLinearLayout.getChildAt(i);
+
+			String t;
+			if (v.getClass() == ToggleButton.class) {
+				ToggleButton tg = (ToggleButton) v;
+				t = tg.getText().toString();
+				if (tagsList.contains(t)) {
+					tg.setChecked(true);
+				}
+			}
+		}
 
 	}
 
@@ -182,26 +231,8 @@ public class AddEntryActivity extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 
 		EditText amount = (EditText) findViewById(R.id.addAmountET);
-		Button date = (Button) findViewById(R.id.addDate);
-		EditText description = (EditText) findViewById(R.id.desciptionEditText);
-		ToggleButton toggleButton = (ToggleButton) findViewById(R.id.toggleCredit);
-		LinearLayout tagsLinearLayout = (LinearLayout) findViewById(R.id.tagsLinearLayout);
 		boolean error = false;
-
-		Date dateAdded = null;
-		try {
-			dateAdded = DateFormat.getDateInstance().parse(
-					date.getText().toString());
-		} catch (ParseException e) {
-			Log.d(TAG, "Date cannot be parsed");
-			e.printStackTrace();
-		}
-
-		entry.setAmount(amount.getText().toString());
-		entry.setDate(dateAdded.getTime());
-		entry.setDesciption(description.getText().toString());
-		entry.setFlag(toggleButton.getText().toString());
-		entry.setTags(getSelectedTags(tagsLinearLayout));
+		Entry entry = getEntryFromUI();
 
 		switch (item.getItemId()) {
 		case android.R.id.home:
@@ -213,8 +244,14 @@ public class AddEntryActivity extends Activity {
 				error = true;
 			}
 			if (!error) {
-				cashBook.getCashBookDataSource().createEntry(entry);
-				cashBook.goHome(cashBook);
+				if (entryFlag.equals("NEW")) {
+					cashBook.getCashBookDataSource().createEntry(entry);
+					cashBook.goHome(cashBook);
+				} else {
+					cashBook.getCashBookDataSource()
+							.updateEntry(entryId, entry);
+					cashBook.goHome(cashBook);
+				}
 			}
 			return true;
 		case R.id.actionbar_addmenu_cancel:

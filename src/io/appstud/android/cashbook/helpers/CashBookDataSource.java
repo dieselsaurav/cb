@@ -72,32 +72,27 @@ public class CashBookDataSource {
 		return ehtId;
 	}
 
-	private long findTagIdByTag(String tag) {
+	public Tag findTagByTag(String tag) {
 		// String.valueOf(tag) is mandatory
 		Cursor cursor = database.query(
 				CashBookSQLiteOpenHelper.TABLE_NAME_TAGS, null,
 				CashBookSQLiteOpenHelper.COL_TAG + " = " + "?",
 				new String[] { String.valueOf(tag) }, null, null, null);
 		cursor.moveToFirst();
-		Tag t = cursorToTag(cursor);
-		long tagId = t.getId();
-		return tagId;
+		return cursorToTag(cursor);
 	}
 
-	private String findTagByTagId(long tagId) {
+	public Tag findTagByTagId(long tagId) {
 		// String.valueOf(tag) is mandatory
 		Cursor cursor = database.query(
 				CashBookSQLiteOpenHelper.TABLE_NAME_TAGS, null,
 				CashBookSQLiteOpenHelper.COL_ID + " = " + "?",
 				new String[] { String.valueOf(tagId) }, null, null, null);
 		cursor.moveToFirst();
-		Tag t = cursorToTag(cursor);
-		String tag = t.getTag();
-		Log.d(TAG, "Tag : " + t.getId() + " - " + t.getTag());
-		return tag;
+		return cursorToTag(cursor);
 	}
 
-	private List<Tag> findTagsByEntryId(long entryId) {
+	public List<Tag> findTagsByEntryId(long entryId) {
 		List<Tag> tags = new ArrayList<Tag>();
 		Cursor cursor = database.query(
 				CashBookSQLiteOpenHelper.TABLE_NAME_ENTRY_HAS_TAG, null,
@@ -106,7 +101,7 @@ public class CashBookDataSource {
 		cursor.moveToFirst();
 		while (!cursor.isAfterLast()) {
 			long tagId = cursor.getLong(2);
-			String tag = findTagByTagId(tagId);
+			String tag = findTagByTagId(tagId).getTag();
 			Tag t = new Tag();
 			t.setId(tagId);
 			t.setTag(tag);
@@ -131,7 +126,7 @@ public class CashBookDataSource {
 				long tagId = createTag(tag.getTag());
 				if (tagId < 1) {
 					Log.d(TAG, "Tags which already exists : " + tag.getTag());
-					tagId = findTagIdByTag(tag.getTag());
+					tagId = findTagByTag(tag.getTag()).getId();
 				}
 				createEHT(entryId, tagId);
 			}
@@ -180,7 +175,7 @@ public class CashBookDataSource {
 		database.update(CashBookSQLiteOpenHelper.TABLE_NAME_TAGS, values,
 				CashBookSQLiteOpenHelper.COL_ID + " = ?",
 				new String[] { String.valueOf(tagId) });
-		tag.setTag(findTagByTagId(tagId));
+		tag.setTag(findTagByTagId(tagId).getTag());
 		return tag;
 	}
 
