@@ -31,7 +31,7 @@ public class EntryDetailActivity extends Activity {
 		Bundle bundle = getIntent().getExtras();
 		entryId = bundle.getLong("ENTRY_ID");
 		cashBook = (CashBook) getApplication();
-		entry = cashBook.getCashBookDataSource().getEntryById(entryId);
+		entry = cashBook.getCashBookDataSource().findEntryById(entryId);
 		setupViews();
 	}
 

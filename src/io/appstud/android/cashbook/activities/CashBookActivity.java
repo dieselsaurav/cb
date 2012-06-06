@@ -28,7 +28,7 @@ public class CashBookActivity extends ListActivity {
 
 		List<Entry> entries = new ArrayList<Entry>();
 
-		entries = cashBook.getCashBookDataSource().getAllEntries();
+		entries = cashBook.getCashBookDataSource().findAllEntries();
 
 		EntryAdapter adapter = new EntryAdapter(this, R.layout.row_entry_date,
 				entries);
@@ -51,6 +51,10 @@ public class CashBookActivity extends ListActivity {
 		case R.id.menuAdd:
 			intent = new Intent(this, AddEntryActivity.class);
 			intent.putExtra("ENTRY_FLAG", "NEW");
+			startActivity(intent);
+			return true;
+		case R.id.menuMotherList:
+			intent = new Intent(this, MotherList.class);
 			startActivity(intent);
 			return true;
 		default:

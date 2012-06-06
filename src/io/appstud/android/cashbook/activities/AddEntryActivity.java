@@ -55,8 +55,8 @@ public class AddEntryActivity extends Activity {
 		setupDatePicker();
 		setupTagSelector();
 		if (!entryFlag.equals("NEW")) {
-			Entry entry = cashBook.getCashBookDataSource()
-					.getEntryById(entryId);
+			Entry entry = cashBook.getCashBookDataSource().findEntryById(
+					entryId);
 			setEntryToUI(entry);
 		}
 	}
@@ -139,7 +139,7 @@ public class AddEntryActivity extends Activity {
 		ToggleButton toggleButton;
 		List<Tag> tags = new ArrayList<Tag>();
 
-		tags = cashBook.getCashBookDataSource().getTags();
+		tags = cashBook.getCashBookDataSource().findAllTags();
 
 		for (Tag tag : tags) {
 			toggleButton = new ToggleButton(this);

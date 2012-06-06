@@ -45,72 +45,6 @@ public class CashBookDataSource {
 		return tagId;
 	}
 
-	public List<Tag> getTags() {
-		List<Tag> tags = new ArrayList<Tag>();
-		Cursor cursor = database.query(
-				CashBookSQLiteOpenHelper.TABLE_NAME_TAGS, null, null, null,
-				null, null, null);
-		Log.d(TAG, "No of Tags : " + String.valueOf(cursor.getCount()));
-		cursor.moveToFirst();
-		while (!cursor.isAfterLast()) {
-			Tag tag = cursorToTag(cursor);
-			tags.add(tag);
-			cursor.moveToNext();
-		}
-		return tags;
-	}
-
-	private long createEHT(long entryId, long tagId) {
-		ContentValues values = new ContentValues();
-		values.put(CashBookSQLiteOpenHelper.COL_ENTRY_ID, entryId);
-		values.put(CashBookSQLiteOpenHelper.COL_TAG_ID, tagId);
-		long ehtId = database
-				.insert(CashBookSQLiteOpenHelper.TABLE_NAME_ENTRY_HAS_TAG,
-						null, values);
-		Log.d(TAG, "Row inserted in EntryHasTags table : " + ehtId + " - "
-				+ entryId + " - " + tagId);
-		return ehtId;
-	}
-
-	public Tag findTagByTag(String tag) {
-		// String.valueOf(tag) is mandatory
-		Cursor cursor = database.query(
-				CashBookSQLiteOpenHelper.TABLE_NAME_TAGS, null,
-				CashBookSQLiteOpenHelper.COL_TAG + " = " + "?",
-				new String[] { String.valueOf(tag) }, null, null, null);
-		cursor.moveToFirst();
-		return cursorToTag(cursor);
-	}
-
-	public Tag findTagByTagId(long tagId) {
-		// String.valueOf(tag) is mandatory
-		Cursor cursor = database.query(
-				CashBookSQLiteOpenHelper.TABLE_NAME_TAGS, null,
-				CashBookSQLiteOpenHelper.COL_ID + " = " + "?",
-				new String[] { String.valueOf(tagId) }, null, null, null);
-		cursor.moveToFirst();
-		return cursorToTag(cursor);
-	}
-
-	public List<Tag> findTagsByEntryId(long entryId) {
-		List<Tag> tags = new ArrayList<Tag>();
-		Cursor cursor = database.query(
-				CashBookSQLiteOpenHelper.TABLE_NAME_ENTRY_HAS_TAG, null,
-				CashBookSQLiteOpenHelper.COL_ENTRY_ID + " = " + "?",
-				new String[] { String.valueOf(entryId) }, null, null, null);
-		cursor.moveToFirst();
-		while (!cursor.isAfterLast()) {
-			long tagId = cursor.getLong(2);
-			String tag = findTagByTagId(tagId).getTag();
-			Tag t = new Tag();
-			t.setId(tagId);
-			t.setTag(tag);
-			tags.add(t);
-			cursor.moveToNext();
-		}
-		return tags;
-	}
-
 	public long createEntry(Entry entry) {
 		ContentValues values = new ContentValues();
 		values.put(CashBookSQLiteOpenHelper.COL_AMT, entry.getAmount());
@@ -135,11 +69,38 @@ public class CashBookDataSource {
 			return -1;
 	}
 
-	public List<Entry> getAllEntries() {
+	private long createEHT(long entryId, long tagId) {
+		ContentValues values = new ContentValues();
+		values.put(CashBookSQLiteOpenHelper.COL_ENTRY_ID, entryId);
+		values.put(CashBookSQLiteOpenHelper.COL_TAG_ID, tagId);
+		long ehtId = database
+				.insert(CashBookSQLiteOpenHelper.TABLE_NAME_ENTRY_HAS_TAG,
+						null, values);
+		Log.d(TAG, "Row inserted in EntryHasTags table : " + ehtId + " - "
+				+ entryId + " - " + tagId);
+		return ehtId;
+	}
+
+	public List<Tag> findAllTags() {
+		List<Tag> tags = new ArrayList<Tag>();
+		Cursor cursor = database.query(
+				CashBookSQLiteOpenHelper.TABLE_NAME_TAGS, null, null, null,
+				null, null, null);
+		Log.d(TAG, "No of Tags : " + String.valueOf(cursor.getCount()));
+		cursor.moveToFirst();
+		while (!cursor.isAfterLast()) {
+			Tag tag = cursorToTag(cursor);
+			tags.add(tag);
+			cursor.moveToNext();
+		}
+		return tags;
+	}
+
+	public List<Entry> findAllEntries() {
 		List<Entry> entries = new ArrayList<Entry>();
 		Cursor cursor = database.query(
 				CashBookSQLiteOpenHelper.TABLE_NAME_ENTRIES, null, null, null,
-				null, null, null);
+				null, null, CashBookSQLiteOpenHelper.COL_DATE);
 		cursor.moveToFirst();
 		while (!cursor.isAfterLast()) {
 			Entry entry = cursorToEntry(cursor);
@@ -155,12 +116,51 @@ public class CashBookDataSource {
 		return entries;
 	}
 
-	public Entry getEntryById(long entryId) {
+	public Tag findTagByTag(String tag) {
+		// String.valueOf(tag) is mandatory
+		Cursor cursor = database.query(
+				CashBookSQLiteOpenHelper.TABLE_NAME_TAGS, null,
+				CashBookSQLiteOpenHelper.COL_TAG + " = " + "?",
+				new String[] { String.valueOf(tag) }, null, null, null);
+		cursor.moveToFirst();
+		return cursorToTag(cursor);
+	}
 
+	public Tag findTagById(long tagId) {
+		// String.valueOf(tag) is mandatory
+		Cursor cursor = database.query(
+				CashBookSQLiteOpenHelper.TABLE_NAME_TAGS, null,
+				CashBookSQLiteOpenHelper.COL_ID + " = " + "?",
+				new String[] { String.valueOf(tagId) }, null, null, null);
+		cursor.moveToFirst();
+		return cursorToTag(cursor);
+	}
+
+	public List<Tag> findTagsByEntryId(long entryId) {
+		List<Tag> tags = new ArrayList<Tag>();
+		Cursor cursor = database.query(
+				CashBookSQLiteOpenHelper.TABLE_NAME_ENTRY_HAS_TAG, null,
+				CashBookSQLiteOpenHelper.COL_ENTRY_ID + " = " + "?",
+				new String[] { String.valueOf(entryId) }, null, null, null);
+		cursor.moveToFirst();
+		while (!cursor.isAfterLast()) {
+			long tagId = cursor.getLong(2);
+			String tag = findTagById(tagId).getTag();
+			Tag t = new Tag();
+			t.setId(tagId);
+			t.setTag(tag);
+			tags.add(t);
+			cursor.moveToNext();
+		}
+		return tags;
+	}
+
+	public Entry findEntryById(long entryId) {
 		Cursor cursor = database.query(
 				CashBookSQLiteOpenHelper.TABLE_NAME_ENTRIES, null,
 				CashBookSQLiteOpenHelper.COL_ID + " = ? ",
 				new String[] { String.valueOf(entryId) }, null, null, null);
+
 		cursor.moveToFirst();
 		Entry entry = cursorToEntry(cursor);
 		List<Tag> tags = new ArrayList<Tag>();
@@ -175,7 +175,7 @@ public class CashBookDataSource {
 		database.update(CashBookSQLiteOpenHelper.TABLE_NAME_TAGS, values,
 				CashBookSQLiteOpenHelper.COL_ID + " = ?",
 				new String[] { String.valueOf(tagId) });
-		tag.setTag(findTagByTagId(tagId).getTag());
+		tag.setTag(findTagById(tagId).getTag());
 		return tag;
 	}
 
@@ -188,10 +188,40 @@ public class CashBookDataSource {
 				new String[] { String.valueOf(entryId) });
 	}
 
+	// TODO needs to be revised
 	public long updateEntry(long entryId, Entry entry) {
 		deleteEntry(entryId);
 		long updatedEntryId = createEntry(entry);
 		return updatedEntryId;
+	}
+
+	public List<Entry> findEntriesByTags(List<Tag> tags) {
+
+		List<Entry> entries = new ArrayList<Entry>();
+		String tagIdsString = "('";
+
+		for (Tag t : tags) {
+			tagIdsString += t.getId() + "','";
+		}
+
+		tagIdsString += "')";
+
+		String[] projection = new String[] { "DISTINCT entry_id" };
+
+		Cursor cursor = database.query(
+				CashBookSQLiteOpenHelper.TABLE_NAME_ENTRY_HAS_TAG, projection,
+				CashBookSQLiteOpenHelper.COL_TAG_ID + " IN " + tagIdsString,
+				null, null, null, null);
+
+		cursor.moveToFirst();
+		while (!cursor.isAfterLast()) {
+			Entry entry = findEntryById(cursor.getLong(0));
+			Log.d(TAG, String.valueOf(cursor.getLong(0)));
+			entries.add(entry);
+			cursor.moveToNext();
+		}
+
+		return entries;
 	}
 
 	private Tag cursorToTag(Cursor cursor) {

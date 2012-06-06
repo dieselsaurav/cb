@@ -9,7 +9,7 @@
     <item
         android:id="@+id/actionbar_addmenu_cancel"
         android:icon="@android:drawable/ic_menu_close_clear_cancel"
-        android:showAsAction="always"
+        android:showAsAction="ifRoom"
         android:title="@android:string/cancel"/>
 
 </menu>

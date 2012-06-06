@@ -66,7 +66,7 @@ public class AddTagDialogFragment extends DialogFragment {
 							ToggleButton toggleButton;
 							List<Tag> tags = new ArrayList<Tag>();
 
-							tags = cashBookDataSource.getTags();
+							tags = cashBookDataSource.findAllTags();
 							cashBookDataSource.close();
 
 							for (Tag tag : tags) {
