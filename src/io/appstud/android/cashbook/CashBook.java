@@ -1,6 +1,6 @@
 package io.appstud.android.cashbook;
 
-import io.appstud.android.cashbook.activities.CashBookActivity;
+import io.appstud.android.cashbook.activities.MotherList;
 import io.appstud.android.cashbook.helpers.CashBookDataSource;
 import android.app.Application;
 import android.content.Context;
@@ -21,7 +21,7 @@ public class CashBook extends Application {
 	}
 
 	public void goHome(Context context) {
-		Intent intent = new Intent(context, CashBookActivity.class);
+		Intent intent = new Intent(context, MotherList.class);
 		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		startActivity(intent);
 	}

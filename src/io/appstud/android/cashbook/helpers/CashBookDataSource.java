@@ -206,6 +206,7 @@ public class CashBookDataSource {
 
 		tagIdsString += "')";
 
+		// query for distinct
 		String[] projection = new String[] { "DISTINCT entry_id" };
 
 		Cursor cursor = database.query(
