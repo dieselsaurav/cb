@@ -188,6 +188,30 @@ public class CashBookDataSource {
 				new String[] { String.valueOf(entryId) });
 	}
 
+	public List<Entry> findEntriesByTimePeriod(long startDate, long endDate) {
+		List<Entry> entries = new ArrayList<Entry>();
+		String whereClause = CashBookSQLiteOpenHelper.COL_DATE
+				+ " BETWEEN ? AND ?";
+		String[] selArgs = new String[] { String.valueOf(startDate),
+				String.valueOf(endDate) };
+		Cursor cursor = database.query(
+				CashBookSQLiteOpenHelper.TABLE_NAME_ENTRIES, null, whereClause,
+				selArgs, null, null, CashBookSQLiteOpenHelper.COL_DATE);
+		cursor.moveToFirst();
+		while (!cursor.isAfterLast()) {
+			Entry entry = cursorToEntry(cursor);
+			Log.d(TAG,
+					"Entry Found : " + entry.getId() + " - "
+							+ entry.getAmount());
+			List<Tag> tags = new ArrayList<Tag>();
+			tags = findTagsByEntryId(entry.getId());
+			entry.setTags(tags);
+			entries.add(entry);
+			cursor.moveToNext();
+		}
+		return entries;
+	}
+
 	// TODO needs to be revised
 	public long updateEntry(long entryId, Entry entry) {
 		deleteEntry(entryId);

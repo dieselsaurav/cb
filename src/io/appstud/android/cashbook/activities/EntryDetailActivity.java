@@ -7,6 +7,7 @@ import io.appstud.android.cashbook.helpers.Tag;
 
 import java.text.DateFormat;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
@@ -32,6 +33,9 @@ public class EntryDetailActivity extends Activity {
 		entryId = bundle.getLong("ENTRY_ID");
 		cashBook = (CashBook) getApplication();
 		entry = cashBook.getCashBookDataSource().findEntryById(entryId);
+		ActionBar actionBar = getActionBar();
+		actionBar.setDisplayShowTitleEnabled(false);
+		actionBar.setDisplayHomeAsUpEnabled(true);
 		setupViews();
 	}
 

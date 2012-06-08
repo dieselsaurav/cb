@@ -12,6 +12,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -48,6 +49,9 @@ public class AddEntryActivity extends Activity {
 		Bundle bundle = getIntent().getExtras();
 		entryFlag = bundle.getString("ENTRY_FLAG");
 		entryId = bundle.getLong("ENTRY_ID");
+		ActionBar actionBar = getActionBar();
+		actionBar.setDisplayShowTitleEnabled(false);
+		actionBar.setDisplayHomeAsUpEnabled(true);
 		setupViews();
 	}
 
