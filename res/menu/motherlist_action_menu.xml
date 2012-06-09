@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/menu_tag_spinner"
+        android:actionViewClass="android.widget.Spinner"
+        android:icon="@android:drawable/ic_menu_more"
+        android:showAsAction="ifRoom"
+        android:title="@string/select_tag"/>
+    <item
+        android:id="@+id/menu_timeperiod_spinner"
+        android:actionViewClass="android.widget.Spinner"
+        android:icon="@android:drawable/ic_menu_more"
+        android:showAsAction="ifRoom"
+        android:title="@string/select_tag"/>
+    <item
+        android:id="@+id/menu_add_entry"
+        android:icon="@android:drawable/ic_menu_add"
+        android:showAsAction="never"
+        android:title="@string/add"/>
+    <item
+        android:id="@+id/menu_prefs"
+        android:icon="@android:drawable/ic_menu_preferences"
+        android:showAsAction="never"
+        android:title="@string/settings"/>
+    <item
+        android:id="@+id/menu_about"
+        android:icon="@android:drawable/ic_menu_info_details"
+        android:showAsAction="never"
+        android:title="@string/about_cashbook"/>
+
+</menu>

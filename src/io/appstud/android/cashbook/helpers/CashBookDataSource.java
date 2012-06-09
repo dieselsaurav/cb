@@ -189,6 +189,7 @@ public class CashBookDataSource {
 	}
 
 	public List<Entry> findEntriesByTimePeriod(long startDate, long endDate) {
+
 		List<Entry> entries = new ArrayList<Entry>();
 		String whereClause = CashBookSQLiteOpenHelper.COL_DATE
 				+ " BETWEEN ? AND ?";
@@ -243,6 +244,38 @@ public class CashBookDataSource {
 			Entry entry = findEntryById(cursor.getLong(0));
 			Log.d(TAG, String.valueOf(cursor.getLong(0)));
 			entries.add(entry);
+			cursor.moveToNext();
+		}
+
+		return entries;
+	}
+
+	public List<Entry> findEntriesByTagsAndTimePeriod(List<Tag> tags,
+			long startDate, long endDate) {
+
+		List<Entry> entries = new ArrayList<Entry>();
+		String tagIdsString = "('";
+
+		for (Tag t : tags) {
+			tagIdsString += t.getId() + "','";
+		}
+
+		tagIdsString += "')";
+
+		// query for distinct
+		String[] projection = new String[] { "DISTINCT entry_id" };
+
+		Cursor cursor = database.query(
+				CashBookSQLiteOpenHelper.TABLE_NAME_ENTRY_HAS_TAG, projection,
+				CashBookSQLiteOpenHelper.COL_TAG_ID + " IN " + tagIdsString,
+				null, null, null, null);
+
+		cursor.moveToFirst();
+		while (!cursor.isAfterLast()) {
+			Entry entry = findEntryById(cursor.getLong(0));
+			Log.d(TAG, String.valueOf(cursor.getLong(0)));
+			if (startDate <= entry.getDate() & entry.getDate() <= endDate)
+				entries.add(entry);
 			cursor.moveToNext();
 		}
 
