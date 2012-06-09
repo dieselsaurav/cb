@@ -282,6 +282,18 @@ public class CashBookDataSource {
 		return entries;
 	}
 
+	public List<Entry> findEntriesTimePeriod(long startDate, long endDate) {
+
+		List<Entry> allEntries = new ArrayList<Entry>();
+		List<Entry> selectedEntries = new ArrayList<Entry>();
+		allEntries = findAllEntries();
+		for (Entry entry : allEntries) {
+			if (startDate <= entry.getDate() & entry.getDate() <= endDate)
+				selectedEntries.add(entry);
+		}
+		return selectedEntries;
+	}
+
 	private Tag cursorToTag(Cursor cursor) {
 		Tag tag = new Tag();
 		tag.setId(cursor.getLong(0));
