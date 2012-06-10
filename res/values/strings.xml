@@ -31,5 +31,11 @@
         <item>This Month</item>
         <item>This Year</item>
     </string-array>
+    <string-array name="array_spinner_groupby">
+        <item>Day</item>
+        <item>Week</item>
+        <item>Month</item>
+        <item>Year</item>
+    </string-array>
 
 </resources>

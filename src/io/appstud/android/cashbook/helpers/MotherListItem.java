@@ -1,14 +1,14 @@
 package io.appstud.android.cashbook.helpers;
 
-import java.util.Date;
-
 public class MotherListItem {
 
 	private long db;
 	private long cr;
-	private long bal;
-	private Date startDate;
-	private Date endDate;
+	private long curBal;
+	private long prevBal;
+	private long startDate;
+	private long endDate;
+	private long id;
 
 	public long getDb() {
 		return db;
@@ -26,28 +26,44 @@ public class MotherListItem {
 		this.cr = cr;
 	}
 
-	public long getBal() {
-		return bal;
-	}
-
-	public void setBal(long bal) {
-		this.bal = bal;
-	}
-
-	public Date getStartDate() {
+	public long getStartDate() {
 		return startDate;
 	}
 
-	public void setStartDate(Date startDate) {
+	public void setStartDate(long startDate) {
 		this.startDate = startDate;
 	}
 
-	public Date getEndDate() {
+	public long getEndDate() {
 		return endDate;
 	}
 
-	public void setEndDate(Date endDate) {
+	public void setEndDate(long endDate) {
 		this.endDate = endDate;
+	}
+
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
+
+	public long getCurBal() {
+		return curBal;
+	}
+
+	public void setCurBal(long curBal) {
+		this.curBal = curBal;
+	}
+
+	public long getPrevBal() {
+		return prevBal;
+	}
+
+	public void setPrevBal(long prevBal) {
+		this.prevBal = prevBal;
 	}
 
 }
