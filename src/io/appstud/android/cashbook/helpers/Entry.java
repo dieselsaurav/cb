@@ -5,9 +5,9 @@ import java.util.List;
 public class Entry {
 
 	private long id;
-	private String amount;
+	private long amount;
 	private long date;
-	private String flag;
+	private boolean flag;
 	private String desciption;
 	private List<Tag> tags;
 
@@ -19,11 +19,11 @@ public class Entry {
 		this.id = id;
 	}
 
-	public String getAmount() {
+	public long getAmount() {
 		return amount;
 	}
 
-	public void setAmount(String amount) {
+	public void setAmount(long amount) {
 		this.amount = amount;
 	}
 
@@ -35,11 +35,11 @@ public class Entry {
 		this.date = date;
 	}
 
-	public String getFlag() {
+	public boolean getFlag() {
 		return flag;
 	}
 
-	public void setFlag(String flag) {
+	public void setFlag(boolean flag) {
 		this.flag = flag;
 	}
 

@@ -50,8 +50,11 @@ public class CashBookDataSource {
 		values.put(CashBookSQLiteOpenHelper.COL_AMT, entry.getAmount());
 		values.put(CashBookSQLiteOpenHelper.COL_DATE, entry.getDate());
 		values.put(CashBookSQLiteOpenHelper.COL_DESC, entry.getDesciption());
-		values.put(CashBookSQLiteOpenHelper.COL_FLAG, entry.getFlag());
-
+		if (entry.getFlag())
+			values.put(CashBookSQLiteOpenHelper.COL_FLAG, "Credit");
+		else
+			values.put(CashBookSQLiteOpenHelper.COL_FLAG, "Debit");
+		
 		if (entry.getTags() != null) {
 			long entryId = database.insert(
 					CashBookSQLiteOpenHelper.TABLE_NAME_ENTRIES, null, values);
@@ -304,8 +307,11 @@ public class CashBookDataSource {
 	private Entry cursorToEntry(Cursor cursor) {
 		Entry entry = new Entry();
 		entry.setId(cursor.getLong(0));
-		entry.setAmount(cursor.getString(1));
-		entry.setFlag(cursor.getString(2));
+		entry.setAmount(cursor.getLong(1));
+		if (cursor.getString(2).equals("Credit"))
+			entry.setFlag(true);
+		else
+			entry.setFlag(false);
 		entry.setDate(cursor.getLong(3));
 		entry.setDesciption(cursor.getString(4));
 		return entry;

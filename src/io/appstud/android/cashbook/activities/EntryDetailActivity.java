@@ -68,8 +68,7 @@ public class EntryDetailActivity extends Activity {
 
 		tagsTextView.setText(tagsString);
 
-		if (entry.getFlag().equals(
-				this.getResources().getString(R.string.credit))) {
+		if (entry.getFlag()) {
 			amountTextView.setTextColor(this.getResources().getColor(
 					R.color.light_green));
 		} else

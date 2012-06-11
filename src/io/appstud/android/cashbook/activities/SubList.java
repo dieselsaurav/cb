@@ -10,7 +10,11 @@ import java.util.List;
 
 import android.app.ActionBar;
 import android.app.ListActivity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
 public class SubList extends ListActivity {
 
@@ -35,12 +39,37 @@ public class SubList extends ListActivity {
 				startDate, endDate);
 		ActionBar actionBar = getActionBar();
 		actionBar.setDisplayShowTitleEnabled(false);
+		actionBar.setDisplayHomeAsUpEnabled(true);
 		setupList(entries);
 	}
 
 	private void setupList(List<Entry> entries) {
 		adapter = new EntryAdapter(this, R.layout.row_entry_date, entries);
 		setListAdapter(adapter);
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.mother_list_action_menu, menu);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			cashBook.goHome(cashBook);
+			return true;
+		case R.id.menu_add_entry:
+			Intent intent = new Intent(this, AddEntryActivity.class);
+			intent.putExtra("ENTRY_FLAG", "NEW");
+			startActivity(intent);
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+
+		}
 	}
 
 }

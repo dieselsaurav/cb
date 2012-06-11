@@ -82,12 +82,11 @@ public class AddEntryActivity extends Activity {
 			e.printStackTrace();
 		}
 
-		entry.setAmount(amount.getText().toString());
+		entry.setAmount(Long.valueOf(amount.getText().toString()));
 		entry.setDate(dateAdded.getTime());
 		entry.setDesciption(description.getText().toString());
-		entry.setFlag(toggleButton.getText().toString());
+		entry.setFlag(toggleButton.isChecked());
 		entry.setTags(getSelectedTags(tagsLinearLayout));
-
 		return entry;
 	}
 
@@ -104,12 +103,12 @@ public class AddEntryActivity extends Activity {
 			tagsList.add(t.getTag());
 		}
 
-		amount.setText(entry.getAmount());
+		amount.setText(String.valueOf(entry.getAmount()));
 		date.setText(DateFormat.getDateInstance(DateFormat.MEDIUM).format(
 				entry.getDate()));
 		description.setText(entry.getDesciption());
 
-		if (entry.getFlag().equals(getString(R.string.credit))) {
+		if (entry.getFlag()) {
 			toggleButton.setChecked(true);
 		} else {
 			toggleButton.setChecked(false);

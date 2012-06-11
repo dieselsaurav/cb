@@ -16,6 +16,8 @@ public class MotherListHelper {
 			char groupBy) {
 		List<MotherListItem> groupedList = new ArrayList<MotherListItem>();
 		TreeSet<Long> ts = new TreeSet<Long>();
+		long credit = 0;
+		long debit = 0;
 
 		for (Entry entry : entries) {
 			Calendar c = Calendar.getInstance();
@@ -79,15 +81,27 @@ public class MotherListHelper {
 			default:
 				Log.e(TAG, "GroupBy token not selected properly");
 				break;
+
+			}
+			motherListItem.setEndDate(c.getTimeInMillis());
+
+			for (Entry entry : entries) {
+				if (entry.getDate() >= motherListItem.getStartDate()
+						& entry.getDate() <= motherListItem.getEndDate()) {
+					if (entry.getFlag()) {
+						credit += entry.getAmount();
+					} else
+						debit += entry.getAmount();
+				}
 			}
 
-			motherListItem.setEndDate(c.getTimeInMillis());
+			motherListItem.setCr(credit);
+			motherListItem.setDb(debit);
 
 			Log.d(TAG,
 					motherListItem.getStartDate() + " - "
 							+ motherListItem.getEndDate());
 
-			// Log.d(TAG, "HashSet values are :" + String.valueOf(it.next()));
 			groupedList.add(motherListItem);
 		}
 
